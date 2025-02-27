@@ -1,8 +1,12 @@
 "use server"
 
+import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
+
+import { getCollection } from "@/lib/db";
 import { RegisterFormSchema } from "@/lib/rules";
 
-export async function register(sate, formData) {
+export async function register(state, formData) {
 
     const validateFields = RegisterFormSchema.safeParse({
         email: formData.get("email"),
@@ -15,5 +19,18 @@ export async function register(sate, formData) {
             errors: validateFields.error.flatten().fieldErrors,
         };
     }
-    console.log(validateFields);
+
+    const {email, password} = validateFields.data;
+    const userCollection = await getCollection("users");
+    if(!userCollection) return { errors: { email: "Server error!" } };
+
+    const existingUser = await userCollection.findOne({ email });
+    if(existingUser) return { errors: { email: "Email already exist in our database!" } };
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const results = await userCollection.insertOne({ email, hashedPassword });
+
+    redirect("/dashboard");
+    console.log(results);
 }
