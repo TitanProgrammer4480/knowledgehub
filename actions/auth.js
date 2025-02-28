@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { getCollection } from "@/lib/db";
 import { RegisterFormSchema } from "@/lib/rules";
+import { createSession } from "@/lib/sessions";
 
 export async function register(state, formData) {
 
@@ -31,6 +32,7 @@ export async function register(state, formData) {
 
     const results = await userCollection.insertOne({ email, hashedPassword });
 
+    await createSession(results.insertedId.toString());
+
     redirect("/dashboard");
-    console.log(results);
 }
