@@ -1,11 +1,13 @@
 "use client"
 
+import { login } from "@/actions/auth";
+import Link from "next/link";
 import { useActionState } from "react";
-import {register} from "../../../actions/auth";
+
 
 export default function Login() {
 
-  const [state, action, isPendig] = useActionState(register, undefined);
+  const [state, action, isPendig] = useActionState(login, undefined);
 
   return (
     <div className="container w-1/2">
@@ -20,19 +22,11 @@ export default function Login() {
         <div>
           <label htmlFor="password">Password</label>
           <input type="password" name="password" />
-          {state?.errors?.password && (
-            <div className="error">
-              <p>Password must:</p>
-              <ul className="list-disc list-inside ml-4">
-                {state.errors.password.map(err => (
-                <li key={err}>{err}</li> 
-                ))}
-              </ul>
-            </div>
-          )}
+          
         </div>
         <div className="flex items-end gap-4">
-          <button disabled={isPendig} className="btn-primary">{isPendig ? "Loading...": "Register"}</button>
+          <button disabled={isPendig} className="btn-primary">{isPendig ? "Loading...": "Login"}</button>
+          <Link href="/register" className="text-link">or register here</Link>
         </div>
       </form>
     </div>

@@ -1,25 +1,25 @@
-import Link from "next/link";
 import "./globals.css";
+import { Poppins } from "next/font/google";
+import Naviagtion from "@/components/Navigation";
+import Footer from "@/components/Footer";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["200", "400", "700"],
+});
+
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className={poppins.className}>
         <header>
-            <nav>
-            <Link className="nav-link" href="/">Home</Link>
-            <div>
-              <Link className="nav-link" href="/register">Register</Link>
-              <Link className="nav-link" href="/dashboard">Dashboard</Link>
-            </div>
-          </nav>
+          <Naviagtion />
         </header>
         <main>
           {children}
         </main>
-        <footer>
-          footer
-        </footer>
+        <Footer />
       </body>
     </html>
   );
